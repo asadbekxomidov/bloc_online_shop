@@ -1,10 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vazifa_16/cubits/product/product_cubit.dart';
 import 'package:vazifa_16/cubits/product/product_state.dart';
 import 'dart:math';
 
-class FavoriteListScreen extends StatelessWidget {
+class FavoriteListScreen extends StatefulWidget {
+  @override
+  State<FavoriteListScreen> createState() => _FavoriteListScreenState();
+}
+
+class _FavoriteListScreenState extends State<FavoriteListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +39,25 @@ class FavoriteListScreen extends StatelessWidget {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  leading: product.image != null
-                      ? Image.network(product.image!)
+                  leading: product.image != null || product.image!.isNotEmpty
+                      ? SizedBox(
+                          width: 60,
+                          height: 45,
+                          child: Image.network(
+                            product.image!,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 60,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  color: _getRandomColor(),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Icon(Icons.error),
+                              );
+                            },
+                          ),
+                        )
                       : Container(
                           width: 65,
                           height: 45,
@@ -88,9 +111,11 @@ class FavoriteListScreen extends StatelessWidget {
             IconButton(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/cartScreen');
+                },
                 icon: Icon(
-                  Icons.person_2_outlined,
+                  CupertinoIcons.cart,
                   size: 25,
                   color: Colors.white,
                 )),

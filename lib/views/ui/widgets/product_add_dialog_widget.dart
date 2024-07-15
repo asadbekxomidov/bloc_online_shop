@@ -17,12 +17,14 @@ class _AddProductDialogState extends State<AddProductDialog> {
   final _formKey = GlobalKey<FormState>();
   late String _title;
   late String _image;
+  late String _price;
 
   @override
   void initState() {
     super.initState();
     _title = widget.product?.title ?? '';
     _image = widget.product?.image ?? '';
+    _price = widget.product?.price ?? '';
   }
 
   @override
@@ -55,9 +57,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   return null;
                 },
                 onChanged: (value) {
-                  setState(() {
-                    _title = value;
-                  });
+                  setState(
+                    () {
+                      _title = value;
+                    },
+                  );
                 },
               ),
             ),
@@ -113,6 +117,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     id: widget.product?.id ?? DateTime.now().toString(),
                     title: _title,
                     image: _image.isNotEmpty ? _image : null,
+                    price: _price.isNotEmpty ? _price : '',
                   );
                   if (widget.product == null) {
                     context.read<ProductCubit>().addProduct(product);

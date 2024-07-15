@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vazifa_16/cubits/order/order_cubit.dart';
 import 'package:vazifa_16/cubits/product/product_cubit.dart';
 import 'package:vazifa_16/cubits/theme/theme_cubit.dart';
+import 'package:vazifa_16/views/ui/screens/carts_screens.dart';
 import 'package:vazifa_16/views/ui/screens/favorite_screens.dart';
 import 'package:vazifa_16/views/ui/screens/product_screens.dart';
 import 'package:vazifa_16/views/ui/screens/settings_screen.dart';
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => ProductCubit()..loadProducts()),
         BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_) => OrderCubit()),
       ],
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, isDarkMode) {
@@ -31,6 +34,7 @@ class MyApp extends StatelessWidget {
               '/productScreen': (context) => ProductListScreen(),
               '/favoriteScreen': (context) => FavoriteListScreen(),
               '/settingsScreen': (context) => SettingsScreen(),
+              '/cartScreen': (context) => CartScreens(),
             },
           );
         },

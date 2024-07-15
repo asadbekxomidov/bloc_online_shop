@@ -1,10 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vazifa_16/cubits/theme/theme_cubit.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,15 +69,16 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             IconButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {},
-              icon: Icon(
-                Icons.person_2_outlined,
-                size: 25,
-                color: Colors.white,
-              ),
-            ),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/cartScreen');
+                },
+                icon: Icon(
+                  CupertinoIcons.cart,
+                  size: 25,
+                  color: Colors.white,
+                )),
             IconButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,

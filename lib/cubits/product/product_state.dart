@@ -13,9 +13,10 @@ class ProductInitial extends ProductState {}
 class ProductLoaded extends ProductState {
   final List<Product> products;
   final List<Product> favorites;
+  final List<Product> cart;
 
-  const ProductLoaded(this.products, this.favorites);
+  const ProductLoaded(this.products, this.favorites, this.cart);
 
   @override
-  List<Object> get props => [products, favorites];
+  List<Object> get props => [products, favorites, cart];
 }

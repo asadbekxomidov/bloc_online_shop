@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vazifa_16/cubits/product/product_cubit.dart';
@@ -27,83 +28,148 @@ class _ProductListScreenState extends State<ProductListScreen> {
       body: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {
           if (state is ProductLoaded) {
-            return ListView.builder(
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                mainAxisExtent: 260,
+                crossAxisCount: 2,
+                mainAxisSpacing: 15,
+                crossAxisSpacing: 15,
+                childAspectRatio: 2 / 3,
+              ),
               itemCount: state.products.length,
               itemBuilder: (context, index) {
                 final product = state.products[index];
                 final Color randomColor = _getRandomColor();
-                return ListTile(
-                  title: Text(
-                    product.title,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  leading: product.image != null && product.image!.isNotEmpty
-                      ? SizedBox(
-                          width: 60,
-                          height: 45,
-                          child: Image.network(
-                            product.image!,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                width: 60,
-                                height: 45,
-                                color: randomColor,
-                                child: Icon(Icons.error),
-                              );
-                            },
-                          ),
-                        )
-                      : Container(
-                          width: 60,
-                          height: 45,
-                          decoration: BoxDecoration(
-                            color: randomColor,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
+                return Card(
+                  child: Column(
                     children: [
-                      IconButton(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        icon: product.isFavorite
-                            ? Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                                size: 20,
-                              )
-                            : Icon(
-                                Icons.favorite_border,
-                                size: 20,
+                      product.image != null && product.image!.isNotEmpty
+                          ? SizedBox(
+                              width: double.infinity,
+                              height: 100,
+                              child: Image.network(
+                                product.image!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    width: double.infinity,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      color: randomColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Icon(Icons.error),
+                                  );
+                                },
                               ),
-                        onPressed: () {
-                          context
-                              .read<ProductCubit>()
-                              .toggleFavorite(product.id);
-                        },
-                      ),
-                      IconButton(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        icon: Icon(Icons.edit, size: 20, color: Colors.blue),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AddProductDialog(product: product);
-                            },
-                          );
-                        },
+                            )
+                          : Container(
+                              width: double.infinity,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: randomColor,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  product.title ?? 'No Title',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  child: product.isFavorite
+                                      ? Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                          size: 22,
+                                        )
+                                      : Icon(
+                                          Icons.favorite_border,
+                                          size: 22,
+                                        ),
+                                  onTap: () {
+                                    context
+                                        .read<ProductCubit>()
+                                        .toggleFavorite(product.id);
+                                  },
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "\$${product.price}" ?? 'narxi kiritilmagan',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 25),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    context
+                                        .read<ProductCubit>()
+                                        .addToCart(product.id);
+                                  },
+                                  child: Icon(
+                                    CupertinoIcons.cart,
+                                    color: Colors.teal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AddProductDialog(
+                                            product: product);
+                                      },
+                                    );
+                                  },
+                                  child: Icon(Icons.edit,
+                                      size: 20, color: Colors.blue),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    context
+                                        .read<ProductCubit>()
+                                        .deleteProduct(product.id);
+                                  },
+                                  child: Icon(
+                                    CupertinoIcons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  onLongPress: () {
-                    context.read<ProductCubit>().deleteProduct(product.id);
-                  },
                 );
               },
             );
@@ -124,7 +190,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onPressed: () {
-                  // Navigator.pushReplacementNamed(context, '/productScreen');
+                  Navigator.pushReplacementNamed(context, '/productScreen');
                 },
                 icon: Icon(
                   Icons.home,
@@ -134,9 +200,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
             IconButton(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/cartScreen');
+                },
                 icon: Icon(
-                  Icons.person_2_outlined,
+                  CupertinoIcons.cart,
                   size: 25,
                   color: Colors.white,
                 )),
